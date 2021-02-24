@@ -1,19 +1,47 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { useCallback } from 'react'
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+  ReactNode,
+} from 'react'
+import { Cocktail } from './pages/SingleCocktail'
+
+type State = {
+  loading: boolean
+  cocktails: Cocktail[]
+  setSearchTerm: Dispatch<SetStateAction<string>>
+}
+
+type CocktailsData = {
+  drinks: {
+    idDrink: string
+    strDrink: string
+    strDrinkThumb: string
+    strAlcoholic: string
+    strGlass: string
+  }[]
+}
+
+type Props = {
+  children: ReactNode
+}
 
 const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s='
-const AppContext = React.createContext()
+const AppContext = React.createContext({} as State)
 
-const AppProvider = ({ children }) => {
+const AppProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('a')
-  const [cocktails, setCocktails] = useState([])
+  const [cocktails, setCocktails] = useState<Cocktail[]>([])
 
   const fetchDrinks = useCallback(async () => {
     setLoading(true)
     try {
       const response = await fetch(`${url}${searchTerm}`)
-      const data = await response.json()
+      const data = (await response.json()) as CocktailsData
       const { drinks } = data
 
       if (drinks) {

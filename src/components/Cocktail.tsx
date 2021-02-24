@@ -1,7 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Cocktail as CocktailType } from '../pages/SingleCocktail'
 
-const Cocktail = ({ image, id, name, info, glass }) => {
+type Props = {
+  cocktail: CocktailType
+}
+
+const Cocktail = ({ cocktail }: Props) => {
+  const { id, name, image, glass, info } = cocktail
+
   return (
     <article className="cocktail">
       <div className="img-container">

@@ -1,20 +1,24 @@
-import React, { useRef } from 'react'
+import React, { FormEvent, useRef } from 'react'
 import { useGlobalContext } from '../context'
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext()
-  const searchValue = useRef('')
+  const searchValue = useRef<HTMLInputElement>(null)
 
   const searchCocktail = () => {
-    setSearchTerm(searchValue.current.value)
+    if (searchValue.current) {
+      setSearchTerm(searchValue.current.value)
+    }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
   }
 
   React.useEffect(() => {
-    searchValue.current.focus()
+    if (searchValue.current) {
+      searchValue.current.focus()
+    }
   }, [])
 
   return (

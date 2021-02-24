@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import Loading from '../components/Loading'
 import { useParams, Link } from 'react-router-dom'
+
+export type Cocktail = {
+  id: string
+  name: string
+  image: string
+  info: string
+  glass: string
+  instructions?: string
+  ingredients?: string[]
+  category?: string
+}
+
 const url = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i='
 
 const SingleCocktail = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const [loading, setLoading] = useState(false)
-  const [cocktail, setCocktail] = useState(null)
+  const [cocktail, setCocktail] = useState<Cocktail | null>(null)
 
   useEffect(() => {
     setLoading(false)
@@ -16,6 +28,7 @@ const SingleCocktail = () => {
         const data = await response.json()
         if (data.drinks) {
           const {
+            idDrink: id,
             strDrink: name,
             strDrinkThumb: image,
             strAlcoholic: info,
@@ -36,6 +49,7 @@ const SingleCocktail = () => {
             strIngredient5,
           ]
           const newCocktail = {
+            id,
             name,
             image,
             info,
@@ -44,6 +58,7 @@ const SingleCocktail = () => {
             instructions,
             ingredients,
           }
+
           setCocktail(newCocktail)
         } else {
           setCocktail(null)
@@ -99,9 +114,11 @@ const SingleCocktail = () => {
           </p>
           <p>
             <span className="drink-data">ingredients :</span>
-            {ingredients.map((item, index) => {
-              return item ? <span key={index}>{item}</span> : null
-            })}
+
+            {ingredients &&
+              ingredients.map((item, index) => {
+                return item ? <span key={index}>{item}</span> : null
+              })}
           </p>
           <p>
             <span className="drink-data">instructions :</span>
